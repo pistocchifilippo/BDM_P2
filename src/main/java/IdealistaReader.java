@@ -36,14 +36,14 @@ public class IdealistaReader {
         return allDates()
                 .map(date -> new Tuple2<>(date, filePerDate(date)))
                 .filter(t -> t._2.isPresent())
-                .map(t -> IDEALISTA_FOLDER + FILE_SEPARATOR + t._1 + FILE_SEPARATOR + t._2.get());
+                .map(t -> IDEALISTA_FOLDER + FILE_SEPARATOR + t._1 + "_idealista" + FILE_SEPARATOR + t._2.get());
     }
 
     public static Stream<Tuple2<String,String>> allPairDateFilePath() {
         return allDates()
                 .map(date -> new Tuple2<>(date, filePerDate(date)))
                 .filter(t -> t._2.isPresent())
-                .map(t -> new Tuple2<>(t._1, IDEALISTA_FOLDER + FILE_SEPARATOR + t._1 + FILE_SEPARATOR + t._2.get()));
+                .map(t -> new Tuple2<>(t._1, IDEALISTA_FOLDER + FILE_SEPARATOR + t._1 + "_idealista" + FILE_SEPARATOR + t._2.get()));
     }
 
 
