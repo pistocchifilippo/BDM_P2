@@ -5,3 +5,5 @@
 - What abstraction do we have to use to describe pipes?
 - Shall we join data in order to have optimised queries?
 - Is it proper the dataset about building age? And working on it making a mean?
+- Reconciliation = JOIN?
+- Data cleaning = Remove useless information in the records, remove duplicate?
