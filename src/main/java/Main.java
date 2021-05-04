@@ -1,3 +1,4 @@
+import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -13,19 +14,22 @@ public class Main {
 			.master("local[*]")
 			.getOrCreate();
 
+	static final String LUT1 = "src/main/resources/lookup_tables/income_lookup_neighborhood.json";
+	static final String LUT2 = "src/main/resources/lookup_tables/rent_lookup_neighborhood.json";
+
 	public static void main(String[] args) throws Exception {
 
-		IdealistaReader.allFilesName().forEach(f -> System.out.println(f));
-		IdealistaReader.allFilesPath().forEach(f -> System.out.println(f));
-		IdealistaReader.allPairDateFilePath().forEach(f -> System.out.println(f));
+		JavaPairRDD<String, String> a = spark.read().json(LUT1).javaRDD()
+				.map(e -> e.toString())
+				.mapToPair(e -> new Tuple2<>(e.split(",")[0], e.split(",")[1]));
+
+		JavaPairRDD<String, String> b = spark.read().json(LUT2).javaRDD()
+				.map(e -> e.toString())
+				.mapToPair(e -> new Tuple2<>(e.split(",")[0], e.split(",")[1]));
 
 
 
-		// Try to read and clean data separately at first
-		JavaRDD<Row> parquetFileDF = spark.read().parquet(PARQUET_FILE).javaRDD();
-		parquetFileDF
-				.mapToPair(e -> new Tuple2<>("THE DATE",e))
-				.foreach(e -> System.out.println(e));
+
 
 	}
 
