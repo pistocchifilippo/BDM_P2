@@ -27,7 +27,7 @@ public class Main {
 //		oldness.foreach(e -> System.out.println(e));
 
 
-		new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark).foreach(e -> System.out.println(e));
+		JavaPairRDD<String, String> idealista = new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
 
 
 
