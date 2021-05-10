@@ -8,6 +8,9 @@ import java.text.DecimalFormat;
 
 public class BuildingAgePreparation implements Preparation <String,String> {
 
+    private static final int NEIGH = 4;
+    private static final int AGE = 6;
+
     private final String path;
 
     public BuildingAgePreparation(final String path) {
@@ -18,8 +21,8 @@ public class BuildingAgePreparation implements Preparation <String,String> {
     public JavaPairRDD<String, String> prepare(final SparkSession spark) {
         return spark.read().csv(path).javaRDD()
                 .mapToPair(e -> {
-                    final String neigh = e.getString(4);
-                    final double age = Double.parseDouble(e.getString(6));
+                    final String neigh = e.getString(NEIGH);
+                    final double age = Double.parseDouble(e.getString(AGE));
                     return new Tuple2<>(neigh, new Tuple2<>(age, 1));
                 })
                 .reduceByKey((x,y) -> new Tuple2<>(x._1 + y._1, x._2 + y._2))

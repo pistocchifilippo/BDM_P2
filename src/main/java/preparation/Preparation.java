@@ -9,11 +9,4 @@ public interface Preparation <X,Y> extends Serializable {
 
     JavaPairRDD<X, Y> prepare(SparkSession spark);
 
-    default String cleanString(final String s) {
-        return s
-                .replace("[","")
-                .replace("]","")
-                .replace("\"", "");
-    }
-
 }
