@@ -49,37 +49,11 @@ public class Main {
 
 		JavaPairRDD<String, Tuple2<String, String>> joinedRdd = income_lut.join(incomes);
 		joinedRdd.foreach(s -> System.out.println(s));
+
+
+
+		
 		SparkMongoDB_income.close();
-
-		// (Sant Genís dels Agudells,51.54)
-		//JavaPairRDD<String, String> oldness = new BuildingAgePreparation(AGE_DATASET).prepare(spark);
-
-//		oldness.foreach(e -> System.out.println(e));
-
-		// (Q1026658,La Nova Esquerra de l'Eixample)
-		//JavaPairRDD<String, String> rent_lut = new RentLutPreparation(RENT_LUT).prepare(spark);
-
-//		rent_lut.foreach(e -> System.out.println(e));
-
-		//new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
-
-		// Join(s)
-
-
-		// (Sant Genís dels Agudells,(Q3298510,51.54))
-		//JavaPairRDD<String,Tuple2<String,String>> income_lut_2 = income_lut.join(oldness);
-
-//		income_lut_2.foreach(e -> System.out.println(e));
-
-//		income_lut_2
-//				.mapToPair(e -> new Tuple2<>(e._2._1,new Tuple2<>(e._1,e._2._2)))
-//				.join(rent_lut)
-//				.mapToPair(e -> new Tuple2<>(e._2._1._1,e._2._2));
-
-
-
-//		new IncomePreparation().prepare(INCOME_DATASET,spark);
-
 
 
 
