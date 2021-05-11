@@ -1,7 +1,7 @@
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.sql.SparkSession;
 import preparation.BuildingAgePreparation;
-import preparation.IdealistaPreparation;
+import preparation.IdealistaPreparationNoDuplicates;
 
 public class Main {
 
@@ -19,28 +19,15 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// Data preparation
-
-		// (Sant Genís dels Agudells,51.54)
-		JavaPairRDD<String, String> oldness = new BuildingAgePreparation(AGE_DATASET).prepare(spark);
+		final JavaPairRDD<String, String> oldness = new BuildingAgePreparation(AGE_DATASET).prepare(spark);
 
 //		oldness.foreach(e -> System.out.println(e));
 
+		final JavaPairRDD<String, String> idealista = new IdealistaPreparationNoDuplicates(IdealistaReader.allPairDateFilePath()).prepare(spark);
 
-		JavaPairRDD<String, String> idealista = new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
-
-
-
-
-//		spark.read().csv("src/main/resources/building_age/2020_edificacions_edat_mitjana.csv").javaRDD()
-//				.union(spark.read().csv("src/main/resources/building_age/2020_edificacions_edat_mitjana.csv").javaRDD())
-//				.saveAsTextFile("src/main/resources/age_out");
-
-
-
+		idealista.foreach(e -> System.out.println(e));
 
 	}
-
 
 }
 
