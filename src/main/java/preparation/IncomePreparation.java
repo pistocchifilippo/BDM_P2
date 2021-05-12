@@ -25,7 +25,6 @@ public class IncomePreparation implements Preparation <String,String>{
 
     public JavaPairRDD<String, String> prepare(final SparkSession spark) {
 
-
         // Create a JavaSparkContext using the SparkSession's SparkContext object
         JavaSparkContext jsc = new JavaSparkContext(spark.sparkContext());
 
@@ -33,7 +32,7 @@ public class IncomePreparation implements Preparation <String,String>{
         Map<String, String> readOverrides = new HashMap<String, String>();
         readOverrides.put("database", "income_opendata");
         readOverrides.put("collection", "income");
-        readOverrides.put("readPreference.name", "secondaryPreferred");
+        readOverrides.put("readPreference.name", "secondaryPreferred"); // mirar millor (!!!)
         ReadConfig readConfig = ReadConfig.create(jsc).withOptions(readOverrides);
 
 
