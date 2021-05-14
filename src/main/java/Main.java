@@ -4,6 +4,8 @@ import org.apache.spark.sql.SparkSession;
 import preparation.*;
 import scala.Tuple2;
 
+import java.text.ParseException;
+
 public class Main {
 
 	static final String APP_NAME = "BDM_P2";
@@ -18,8 +20,10 @@ public class Main {
 			.getOrCreate();
 
 
+
 	static final String INCOME_LUT = "src/main/resources/lookup_tables/income_lookup_neighborhood.json";
 	static final String RENT_LUT = "src/main/resources/lookup_tables/rent_lookup_neighborhood.json";
+	static final String AGE_DATASET = "src/main/resources/building_age/2020_edificacions_edat_mitjana.csv";
 	static final String INCOME_DATASET = "src/main/resources/income_opendata/income_opendata_neighborhood.json";
 
 
@@ -27,23 +31,24 @@ public class Main {
 
 		// Data preparation
 		// Idealista
-
+		//JavaPairRDD<String, String> idealista = new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
+		//idealista.foreach(s -> System.out.println(s));
 
 		// Idealista Lookup table (neighborhood)
-		JavaPairRDD<String, String> rent_lut = new IncomeLutPreparation(RENT_LUT).prepare(spark);
-		rent_lut.foreach(e -> System.out.println(e));
+		JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation(RENT_LUT).prepare(spark);
+		//rent_lut.foreach(e -> System.out.println(e));
 
 		// Income Lookup table (neighborhood)
 		JavaPairRDD<String, String> income_lut = new IncomeLutPreparation(INCOME_LUT).prepare(spark);
-		income_lut.foreach(e -> System.out.println(e));
+		//income_lut.foreach(e -> System.out.println(e));
 
 		// Income Opendata dataset (neighborhood)
 		JavaPairRDD<String, String> incomes = new IncomePreparation(INCOME_DATASET).prepare(spark);
-		incomes.foreach(s -> System.out.println(s));
+		//incomes.foreach(s -> System.out.println(s));
 
 		// Join: Income OpenData & LUT
 		JavaPairRDD<String, Tuple2<String, String>> joinedIncome = income_lut.join(incomes);
-		joinedIncome.foreach(s -> System.out.println(s));
+		//joinedIncome.foreach(s -> System.out.println(s));
 
 
 		spark.close();
