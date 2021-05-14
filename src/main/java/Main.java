@@ -1,7 +1,8 @@
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.SparkSession;
-import preparation.BuildingAgePreparation;
-import preparation.IdealistaPreparationNoDuplicates;
+import preparation.*;
+import scala.Tuple2;
 
 public class Main {
 
@@ -10,6 +11,8 @@ public class Main {
 			.builder()
 			.appName(APP_NAME)
 			.master("local[*]")
+			.config("spark.mongodb.input.uri", "mongodb://10.4.41.153/lookup_tables.income_lut_neigh")
+			.config("spark.mongodb.output.uri", "mongodb://10.4.41.153/lookup_tables.income_lut_neigh")
 			.getOrCreate();
 
 	static final String INCOME_LUT = "src/main/resources/lookup_tables/income_lookup_neighborhood.json";
@@ -23,9 +26,48 @@ public class Main {
 
 //		oldness.foreach(e -> System.out.println(e));
 
+		// Idealista dataset
 		final JavaPairRDD<String, String> idealista = new IdealistaPreparationNoDuplicates(IdealistaReader.allPairDateFilePath()).prepare(spark);
-
 		idealista.foreach(e -> System.out.println(e));
+
+		// Idealista Lookup table (neighborhood)
+		JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation(RENT_LUT).prepare(spark);
+		//rent_lut.foreach(e -> System.out.println(e));
+
+		// Income Lookup table (neighborhood)
+		JavaPairRDD<String, String> income_lut = new IncomeLutPreparation(INCOME_LUT).prepare(spark);
+		//income_lut.foreach(e -> System.out.println(e));
+
+		// Income Opendata dataset (neighborhood)
+		JavaPairRDD<String, String> incomes = new IncomePreparation(INCOME_DATASET).prepare(spark);
+		//incomes.foreach(s -> System.out.println(s));
+
+		// Join: Income OpenData & LUT
+		JavaPairRDD<String, Tuple2<String, String>> joinedIncome = income_lut.join(incomes);
+		joinedIncome.foreach(s -> System.out.println(s));
+		
+		// Join: Idealista & LUT
+		JavaPairRDD<String, Tuple2<String, String>> joinedIdealista = rent_lut.join(idealista);
+		//joinedIdealista.foreach(s -> System.out.println(s));
+
+		JavaPairRDD<String,String> idealistaByNeighID = joinedIdealista.mapToPair(t -> new Tuple2<>(t._2._1,t._2._2));
+		//idealistaByNeighID.foreach(s -> System.out.println(s));
+
+		JavaPairRDD<String,String> incomeByNeighID = joinedIncome.mapToPair(t -> new Tuple2<>(t._2._1,t._2._2));
+		//incomeByNeighID.foreach(s -> System.out.println(s));
+
+		JavaRDD<String> dataset = idealistaByNeighID.join(incomeByNeighID).map(t -> (t._1+","+t._2._1 +"," +t._2._2));
+		dataset.foreach(s -> System.out.println(s));
+		//	dataset
+		//			.coalesce(1)
+		//			.saveAsTextFile("data_result1.csv");
+
+
+		JavaPairRDD<String, Integer > query1 = dataset
+													.mapToPair(s -> new Tuple2<>(s.split(",")[1], 1))
+													.reduceByKey((a,b) -> a + b);
+		query1.foreach(s -> System.out.println(s));
+
 
 	}
 
