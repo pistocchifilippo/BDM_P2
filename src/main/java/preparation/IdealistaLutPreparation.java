@@ -35,11 +35,11 @@ public class IdealistaLutPreparation implements Preparation <String,String>{
         ReadConfig readConfig = ReadConfig.create(jsc).withOptions(readOverrides);
 
 
-        JavaMongoRDD<Document> rdd = MongoSpark.load(jsc);
+        JavaMongoRDD<Document> rdd = MongoSpark.load(jsc, readConfig);
         System.out.println(rdd.take(5));
         JavaPairRDD<String, String> rdd2 = rdd.mapToPair((document) ->{
 
-            String neigh = document.getString("neighborhood");
+            String neigh = document.getString("ne");
             String id = document.getString("_id");
 
             return new Tuple2<String, String>(neigh, id);
