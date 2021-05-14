@@ -51,7 +51,7 @@ public class IncomePreparation implements Preparation <String,String>{
             String rfd = info.get(0).getDouble("RFD").toString();
             String year = info.get(0).getInteger("year").toString();
             String pop = info.get(0).getInteger("pop").toString();
-            String value =  year + ";" + pop + ";" + rfd;
+            String value =  year + "," + pop + "," + rfd;
 
             return new Tuple2<String, String>(neigh, value);
 
