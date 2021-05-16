@@ -1,15 +1,21 @@
+import KPIs.KPI1;
+import KPIs.KPI2;
+import KPIs.KPI3;
+import KPIs.MyKPIs;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.execution.columnar.INT;
 import preparation.*;
 import scala.Tuple2;
 
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 
 public class Main {
 
 	static final String APP_NAME = "BDM_P2";
-	static final String PARQUET_FILE = "src/main/resources/idealista/2020_01_02_idealista/part-00000-73a2bf77-0d24-4f05-bf18-7351de8d7938-c000.snappy.parquet";
 
 	static final SparkSession spark = SparkSession
 			.builder()
@@ -18,45 +24,37 @@ public class Main {
 			.config("spark.mongodb.input.uri", "mongodb://10.4.41.153/lookup_tables.income_lut_neigh")
 			.config("spark.mongodb.output.uri", "mongodb://10.4.41.153/lookup_tables.income_lut_neigh")
 			.getOrCreate();
-
-
-
-	static final String INCOME_LUT = "src/main/resources/lookup_tables/income_lookup_neighborhood.json";
-	static final String RENT_LUT = "src/main/resources/lookup_tables/rent_lookup_neighborhood.json";
-	static final String AGE_DATASET = "src/main/resources/building_age/2020_edificacions_edat_mitjana.csv";
-	static final String INCOME_DATASET = "src/main/resources/income_opendata/income_opendata_neighborhood.json";
+	private static MyKPIs output;
 
 
 	public static void main(String[] args) throws Exception {
 
-		// Data preparation
-		// Idealista
-		//JavaPairRDD<String, String> idealista = new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
-		//idealista.foreach(s -> System.out.println(s));
+		if (args[0].equals("-retrieve")) {
 
-		// Idealista Lookup table (neighborhood)
-		JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation(RENT_LUT).prepare(spark);
-		//rent_lut.foreach(e -> System.out.println(e));
-
-		// Income Lookup table (neighborhood)
-		JavaPairRDD<String, String> income_lut = new IncomeLutPreparation(INCOME_LUT).prepare(spark);
-		//income_lut.foreach(e -> System.out.println(e));
-
-		// Income Opendata dataset (neighborhood)
-		JavaPairRDD<String, String> incomes = new IncomePreparation(INCOME_DATASET).prepare(spark);
-		//incomes.foreach(s -> System.out.println(s));
-
-		// Join: Income OpenData & LUT
-		JavaPairRDD<String, Tuple2<String, String>> joinedIncome = income_lut.join(incomes);
-		//joinedIncome.foreach(s -> System.out.println(s));
-
-
-		spark.close();
-
-
-
+			if (args[1].equals("-KPI1")) {
+				output = (MyKPIs) new KPI1();
+				JavaRDD<String> result = output.retrieve(spark);
+				result.foreach(s -> System.out.println(s));
+				//result.coalesce(1).saveAsTextFile(args[2]);
+				spark.close();
+			} else if (args[1].equals("-KPI2")) {
+				output = (MyKPIs) new KPI2();
+				JavaRDD<String> result = output.retrieve(spark);
+				result.coalesce(1).saveAsTextFile(args[2]);
+				spark.close();
+			} else if (args[1].equals("-KPI3")) {
+			output = (MyKPIs) new KPI3();
+			JavaRDD<String> result = output.retrieve(spark);
+			result.coalesce(1).saveAsTextFile(args[2]);
+			spark.close();
+		}
 	}
 
 
-}
+
+
+	}}
+
+
+
 
