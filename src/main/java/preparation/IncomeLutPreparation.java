@@ -39,9 +39,9 @@ public class IncomeLutPreparation implements Preparation <String,String>{
         JavaPairRDD<String, String> rdd2 = rdd.mapToPair((document) ->{
             String neigh = document.getString("neighborhood");
             String id = document.getString("_id");
+            String neigh_reconciled = document.getString("neighborhood_reconciled");
 
-
-            return new Tuple2<String, String>(neigh, id);
+            return new Tuple2<String, String>(neigh, id + "," + neigh_reconciled);
 
         });
 

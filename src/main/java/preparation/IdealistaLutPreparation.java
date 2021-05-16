@@ -36,7 +36,6 @@ public class IdealistaLutPreparation implements Preparation <String,String>{
 
 
         JavaMongoRDD<Document> rdd = MongoSpark.load(jsc, readConfig);
-        System.out.println(rdd.take(5));
         JavaPairRDD<String, String> rdd2 = rdd.mapToPair((document) ->{
 
             String neigh = document.getString("ne");
