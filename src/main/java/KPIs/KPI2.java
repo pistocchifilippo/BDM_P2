@@ -33,7 +33,7 @@ public class KPI2 implements MyKPIs {
         JavaPairRDD<String, String> idealista = new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
         //Idealista Lookup table (neighborhood)
         // (El Gòtic,Q17154)
-        JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation(RENT_LUT).prepare(spark);
+        JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation().prepare(spark);
 
 
         // Join: Idealista & LUT
@@ -45,11 +45,11 @@ public class KPI2 implements MyKPIs {
 
         // Income Lookup table (neighborhood)
         // (el Poblenou,Q1404773,Reconciled)
-        JavaPairRDD<String, String> income_lut = new IncomeLutPreparation(INCOME_LUT).prepare(spark);
+        JavaPairRDD<String, String> income_lut = new IncomeLutPreparation().prepare(spark);
 
         // Income Opendata dataset (neighborhood)
         // (el Poble Sec,2017,40358,82.2)
-        JavaPairRDD<String, String> incomes = new IncomePreparation(INCOME_DATASET).prepare(spark);
+        JavaPairRDD<String, String> incomes = new IncomePreparation().prepare(spark);
 
         // Join: Income OpenData & LUT
         JavaPairRDD<String, String> incomeByNeighID = income_lut.join(incomes)

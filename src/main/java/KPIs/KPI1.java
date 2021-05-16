@@ -9,11 +9,6 @@ import scala.Tuple2;
 
 public class KPI1 implements MyKPIs{
 
-
-    static final String RENT_LUT = "src/main/resources/lookup_tables/rent_lookup_neighborhood.json";
-
-
-
     public JavaRDD<String> retrieve(final SparkSession spark) {
 
         // Data preparation
@@ -24,7 +19,7 @@ public class KPI1 implements MyKPIs{
 
         // Idealista Lookup table (neighborhood)
         // (El Gòtic,Q17154)
-        JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation(RENT_LUT).prepare(spark);
+        JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation().prepare(spark);
 
 
         // Idealista by Neighborhood ID

@@ -15,12 +15,6 @@ import java.util.Map;
 
 public class IdealistaLutPreparation implements Preparation <String,String>{
 
-    private final String path;
-
-    public IdealistaLutPreparation(final String path) {
-        this.path = path;
-    }
-
     @Override
     public JavaPairRDD<String, String> prepare(final SparkSession spark) {
 

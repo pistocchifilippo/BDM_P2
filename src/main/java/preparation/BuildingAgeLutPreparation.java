@@ -4,8 +4,6 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.sql.SparkSession;
 import scala.Tuple2;
 
-import java.text.DecimalFormat;
-
 public class BuildingAgeLutPreparation implements Preparation <String,String> {
 
     private final String path;

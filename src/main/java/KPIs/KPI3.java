@@ -13,12 +13,8 @@ import java.text.DecimalFormat;
 
 public class KPI3 implements MyKPIs {
 
-
-
-    static final String RENT_LUT = "src/main/resources/lookup_tables/rent_lookup_neighborhood.json";
     static final String AGE_DATASET = "src/main/resources/building_age/2020_edificacions_edat_mitjana.csv";
     static final String AGE_LUT = "src/main/resources/building_age/buildingAge_lookup.csv";
-
 
     public JavaRDD<String> retrieve(final SparkSession spark) {
 
@@ -29,7 +25,7 @@ public class KPI3 implements MyKPIs {
         JavaPairRDD<String, String> idealista = new IdealistaPreparation(IdealistaReader.allPairDateFilePath()).prepare(spark);
         //Idealista Lookup table (neighborhood)
         // (El Gòtic,Q17154)
-        JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation(RENT_LUT).prepare(spark);
+        JavaPairRDD<String, String> rent_lut = new IdealistaLutPreparation().prepare(spark);
 
 
         // Join: Idealista & LUT

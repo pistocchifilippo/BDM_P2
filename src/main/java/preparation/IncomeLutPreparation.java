@@ -15,12 +15,6 @@ import java.util.Map;
 
 public class IncomeLutPreparation implements Preparation <String,String>{
 
-    private final String path;
-
-    public IncomeLutPreparation(final String path) {
-        this.path = path;
-    }
-
     @Override
     public JavaPairRDD<String, String> prepare(final SparkSession spark) {
 

@@ -16,13 +16,6 @@ import java.util.*;
 
 public class IncomePreparation implements Preparation <String,String>{
 
-    private final String path;
-
-
-    public IncomePreparation(final String path) {
-        this.path = path;
-    }
-
     public JavaPairRDD<String, String> prepare(final SparkSession spark) {
 
         // Create a JavaSparkContext using the SparkSession's SparkContext object
