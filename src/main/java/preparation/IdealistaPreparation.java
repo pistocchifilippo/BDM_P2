@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class IdealistaPreparation implements Preparation <String,String>{
 
     private static final int PROPERTY_CODE_INDEX = 20;
-    private static final String SEPARATOR = ",";
+    private static final String SEPARATOR = ";";
     private final Stream<Tuple2<String,String>> paths;
 
     public IdealistaPreparation(final Stream<Tuple2<String,String>> paths) {
@@ -74,14 +74,3 @@ public class IdealistaPreparation implements Preparation <String,String>{
     }
 }
 
-         //       .reduceByKey((String a, String b) -> (a.split(SEPARATOR)[0].compareTo(b.split(SEPARATOR)[0])) < 0 ? a : b)
-
-
-//     .reduceByKey((String a, String b) ->{
-//                    //Date date1 = sdf.parse(a.split(SEPARATOR)[0].replace("_", "-"));
-//                    String result = compareDate(a,b);
-//                  //  System.out.println(result);
-//                    return result;
-//                //    Date date2 = sdf.parse(b.split(SEPARATOR)[0].replace("_", "-"));
-//                //    if (date1.compareTo(date2) < 0) return a; else return b;
-//                } )

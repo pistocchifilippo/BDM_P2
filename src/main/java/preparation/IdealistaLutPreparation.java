@@ -25,7 +25,7 @@ public class IdealistaLutPreparation implements Preparation <String,String>{
         Map<String, String> readOverrides = new HashMap<String, String>();
         readOverrides.put("database", "lookup_tables");
         readOverrides.put("collection", "rent_lut_neigh");
-        readOverrides.put("readPreference.name", "secondaryPreferred"); // mirar millor (!!!)
+        readOverrides.put("readPreference.name", "primaryPreferred");
         ReadConfig readConfig = ReadConfig.create(jsc).withOptions(readOverrides);
 
 

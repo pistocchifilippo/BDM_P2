@@ -25,8 +25,7 @@ public class Main {
 			if (args[1].equals("-KPI1")) {
 				output = new KPI1();
 				JavaRDD<String> result = output.retrieve(spark);
-				result.foreach(s -> System.out.println(s));
-				//result.coalesce(1).saveAsTextFile(args[2]);
+				result.coalesce(1).saveAsTextFile(args[2]);
 			} else if (args[1].equals("-KPI2")) {
 				output = new KPI2();
 				JavaRDD<String> result = output.retrieve(spark);

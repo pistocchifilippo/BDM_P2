@@ -32,6 +32,7 @@ public class KPI3 implements MyKPIs {
         // (Q3596096,2020_12_07,89407269,Sants - Badal,120000.0)
         JavaPairRDD<String,String> idealistaByNeighID = rent_lut.join(idealista)
                 .mapToPair(t -> new Tuple2<>(t._2._1,t._2._2)).cache();
+        idealistaByNeighID.foreach(s -> System.out.println(s));
 
         //==============================================================================================================
 
@@ -45,19 +46,21 @@ public class KPI3 implements MyKPIs {
         JavaPairRDD<String, String> buildingAge_lut = new BuildingAgeLutPreparation(AGE_LUT).prepare(spark);
 
         // Join:Building Average age & LUT
-        JavaPairRDD<String,String> buildingAgeByNeighID = buildingAge_lut.join(oldness).mapToPair(t -> new Tuple2<>(t._2._1, t._1 + "," + t._2._2));;
-
-     //=================================================================================================================
+        JavaPairRDD<String,String> buildingAgeByNeighID = buildingAge_lut.join(oldness)
+                .mapToPair(t -> new Tuple2<>(t._2._1, t._1 + ";" + t._2._2));;
+        buildingAgeByNeighID.foreach(s -> System.out.println(s));
+//Join building AND LUT(Q3298510,Sant Genís dels Agudells;51.54)
+        //=================================================================================================================
 
         JavaRDD<String> kpi3 = idealistaByNeighID
-                .mapToPair(s -> new Tuple2<>(s._1, new Tuple2<Double, Integer>(Double.parseDouble(s._2.split(",")[3]), 1)))
+                .mapToPair(s -> new Tuple2<>(s._1, new Tuple2<Double, Integer>(Double.parseDouble(s._2.split(";")[3]), 1)))
                 .reduceByKey((a, b) -> {
                     Double res1 = a._1 + b._1;
                     int res2 = a._2 + b._2;
                     return new Tuple2<>(res1, res2);
                 })
                 .mapValues(s -> new DecimalFormat("0.00").format(s._1/s._2)) // (Q3294602,320000.00)
-                .join(buildingAgeByNeighID).map(s -> s._1 + "," + s._2._1 + "," + s._2._2);
+                .join(buildingAgeByNeighID).map(s -> s._1 + ";" + s._2._2.split(";")[0] + ";" + s._2._1  +  ";" + s._2._2.split(";")[1]);
 
         return kpi3;
 
